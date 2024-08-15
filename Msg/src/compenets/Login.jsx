@@ -1,6 +1,10 @@
 import React from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const LoginComponent = () => {
+  const navigate =useNavigate()
+  function hadleclick(){
+     navigate('/profile')
+  }
   return (
     <div className="py-16">
       <div className="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
@@ -46,11 +50,11 @@ const LoginComponent = () => {
             <input className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="password" />
           </div>
           <div className="mt-8">
-            <button className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Login</button>
+            <button onClick={hadleclick} className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Login</button>
           </div>
           <div className="mt-4 flex items-center justify-between">
             <span className="border-b w-1/5 md:w-1/4"></span>
-            <a href="#" className="text-xs text-gray-500 uppercase">or sign up</a>
+            <a href="/" className="text-xs text-gray-500 uppercase">or sign up</a>
             <span className="border-b w-1/5 md:w-1/4"></span>
           </div>
         </div>
