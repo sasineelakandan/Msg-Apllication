@@ -1,6 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
 const SignupComponent = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [formData, setFormData] = useState({
+    Name: '',
+    email: '',
+    Password: '',
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post('http://localhost:8000/signup', data);
+      console.log(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="py-16">
       <div className="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
@@ -34,21 +52,55 @@ const SignupComponent = () => {
             <a href="#" className="text-xs text-center text-gray-500 uppercase">or sign up with email</a>
             <span className="border-b w-1/5 lg:w-1/4"></span>
           </div>
-          <div className="mt-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
-            <input className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="text" />
-          </div>
-          <div className="mt-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
-            <input className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="email" />
-          </div>
-          <div className="mt-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
-            <input className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="password" />
-          </div>
-          <div className="mt-8">
-            <button className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Sign Up</button>
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
+              <input
+                className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
+                type="text"
+                {...register('Name', { required: 'Name is required' })}
+              />
+              {errors.Name && <p className="text-red-500 text-xs italic">{errors.Name.message}</p>}
+            </div>
+            <div className="mt-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+              <input
+                className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
+                type="email"
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^\S+@\S+$/i,
+                    message: 'Enter a valid email address'
+                  }
+                })}
+              />
+              {errors.email && <p className="text-red-500 text-xs italic">{errors.email.message}</p>}
+            </div>
+            <div className="mt-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+              <input
+                className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
+                type="password"
+                {...register('Password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be at least 6 characters long'
+                  },
+                })}
+              />
+              {errors.Password && <p className="text-red-500 text-xs italic">{errors.Password.message}</p>}
+            </div>
+            <div className="mt-8">
+              <button
+                type="submit"
+                className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
+              >
+                Sign Up
+              </button>
+            </div>
+          </form>
           <div className="mt-4 flex items-center justify-between">
             <span className="border-b w-1/5 md:w-1/4"></span>
             <a href="/login" className="text-xs text-gray-500 uppercase">or login</a>
@@ -58,6 +110,6 @@ const SignupComponent = () => {
       </div>
     </div>
   );
-}
+};
 
 export default SignupComponent;
